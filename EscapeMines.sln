@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F0BAAB0E-0AD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4973F263-9571-4EBE-98B6-20430763F0F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EscapeMines.Tests", "EscapeMines.Tests\EscapeMines.Tests.csproj", "{97C11349-70DC-4F09-B9C3-586046FB71B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EscapeMines.Tests", "tests\EscapeMines.Tests\EscapeMines.Tests.csproj", "{97C11349-70DC-4F09-B9C3-586046FB71B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
