@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\EscapeMines\EscapeMines.csproj" />
+    <ProjectReference Include="..\..\src\EscapeMines\EscapeMines.csproj" />
   </ItemGroup>
 
 </Project>

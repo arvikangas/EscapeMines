@@ -14,5 +14,12 @@ namespace EscapeMines.Models
             X = x;
             Y = y;
         }
+
+        public static Coord operator +(Coord c1, Coord c2) => new Coord(c1.X + c2.X, c1.Y + c2.Y);
+
+        public static Coord Up = new Coord(0, 1);
+        public static Coord Down = new Coord(0, -1);
+        public static Coord Left = new Coord(-1, 0);
+        public static Coord Right = new Coord(1, 0);
     }
 }
