@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EscapeMines.Services;
+using System;
+using System.IO;
 
 namespace EscapeMines
 {
@@ -6,7 +8,18 @@ namespace EscapeMines
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Enter file location: ");
+            var path = Console.ReadLine();
+
+            var s = File.ReadAllText(path);
+
+            IInputParser parser = new InputParser();
+            var input = parser.Parse(s);
+
+            ITurtleMoverService mover = new TurtleMoverService();
+            var result = mover.Run(input);
+
+            Console.WriteLine($"Result: {result}");
         }
     }
 }

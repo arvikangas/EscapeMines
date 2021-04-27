@@ -1,4 +1,5 @@
-﻿using EscapeMines.Models;
+﻿using EscapeMines.Exceptions;
+using EscapeMines.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace EscapeMines.Services
     {
         public Result Run(Input input)
         {
+            ValidateInput(input);
+
             var turtle = new Turtle() { Coord = new Coord(input.Turtle.Coord.X, input.Turtle.Coord.Y), Direction = input.Turtle.Direction };
             var mines = input.Mines.ToHashSet();
 
@@ -18,12 +21,15 @@ namespace EscapeMines.Services
                 {
                     case Move.Left:
                     case Move.Right:
-                        turtle.Direction = TurnTurtle(turtle.Direction, move); break;
+                        {
+                            turtle.Direction = TurnTurtle(turtle.Direction, move); 
+                            continue;
+                        }
                     case Move.Move:
                         turtle.Coord = MoveTurtle(input.BoardSize, turtle.Coord, turtle.Direction); break;
                 }
 
-                if(mines.Contains(turtle.Coord))
+                if (mines.Contains(turtle.Coord))
                 {
                     return Result.MineHit;
                 }
@@ -35,6 +41,32 @@ namespace EscapeMines.Services
             }
 
             return Result.StillInDanger;
+        }
+
+        private void ValidateInput(Input input)
+        {
+            if(input.BoardSize.X <= 0 || input.BoardSize.Y <= 0)
+            {
+                throw new InvalidBoardSizeException(input.BoardSize);
+            }
+
+            if (input.Turtle.Coord.X < 0 || input.Turtle.Coord.Y < 0 || 
+                input.Turtle.Coord.X > input.BoardSize.X || input.Turtle.Coord.Y > input.BoardSize.Y)
+            {
+                throw new ObjectOutOfBoardException("Turtle", input.BoardSize);
+            }
+
+            if (input.Exit.X < 0 || input.Exit.Y < 0 ||
+                input.Exit.X > input.BoardSize.X || input.Exit.Y > input.BoardSize.Y)
+            {
+                throw new ObjectOutOfBoardException("Exit", input.BoardSize);
+            }
+
+            var outOfBoardMines = input.Mines.Where(x => x.X < 0 || x.Y < 0 || x.X > input.BoardSize.X || x.Y > input.BoardSize.Y);
+            if(outOfBoardMines.Any())
+            {
+                throw new ObjectOutOfBoardException("Mine", outOfBoardMines.First());
+            }
         }
 
         private Direction TurnTurtle(Direction direction, Move move)
@@ -54,10 +86,10 @@ namespace EscapeMines.Services
             Coord directionCoord;
             switch (direction)
             {
-                case Direction.North: directionCoord = Coord.Up; break;
-                case Direction.East: directionCoord = Coord.Right; break;
-                case Direction.South: directionCoord = Coord.Down; break;
-                case Direction.West: directionCoord = Coord.Left; break;
+                case Direction.North: directionCoord = Coord.North; break;
+                case Direction.East: directionCoord = Coord.East; break;
+                case Direction.South: directionCoord = Coord.South; break;
+                case Direction.West: directionCoord = Coord.West; break;
                 default: throw new InvalidOperationException();
             }
 

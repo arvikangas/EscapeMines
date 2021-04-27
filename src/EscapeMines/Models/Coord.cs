@@ -16,10 +16,14 @@ namespace EscapeMines.Models
         }
 
         public static Coord operator +(Coord c1, Coord c2) => new Coord(c1.X + c2.X, c1.Y + c2.Y);
+        public static bool operator == (Coord c1, Coord c2) => c1.X == c2.X && c1.Y == c2.Y;
+        public static bool operator !=(Coord c1, Coord c2) => c1.X != c2.X || c1.Y != c2.Y;
 
-        public static Coord Up = new Coord(0, 1);
-        public static Coord Down = new Coord(0, -1);
-        public static Coord Left = new Coord(-1, 0);
-        public static Coord Right = new Coord(1, 0);
+        public static Coord North = new Coord(-1, 0);
+        public static Coord South = new Coord(1, 0);
+        public static Coord East = new Coord(0, 1);
+        public static Coord West = new Coord(0, -1);
+
+        public override string ToString() => $"X:{X} Y:{Y}";
     }
 }

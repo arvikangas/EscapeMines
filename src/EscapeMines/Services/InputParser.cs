@@ -22,7 +22,8 @@ namespace EscapeMines.Services
             {
                 throw new InvalidInputStringException($"Board size data count {boardSize.Length}. Expected 2");
             }
-            result.BoardSize = new Coord(int.Parse(boardSize[0]), int.Parse(boardSize[1]));
+
+            result.BoardSize = new Coord(int.Parse(boardSize[1]), int.Parse(boardSize[0]));
 
             var mines = lines[1].Split(' ');
             var minesList = new List<Coord>();
@@ -42,7 +43,7 @@ namespace EscapeMines.Services
             {
                 throw new InvalidInputStringException($"Exit data count {boardSize.Length}. Expected 2");
             }
-            result.Exit = new Coord(int.Parse(exit[0]), int.Parse(exit[1]));
+            result.Exit = new Coord(int.Parse(exit[1]), int.Parse(exit[0]));
 
             result.Turtle = new Turtle();
             var turle = lines[3].Split(' ');
@@ -50,7 +51,7 @@ namespace EscapeMines.Services
             {
                 throw new InvalidInputStringException($"Exit variable count {boardSize.Length}. Expected 3");
             }
-            result.Turtle.Coord = new Coord(int.Parse(turle[0]), int.Parse(turle[1]));
+            result.Turtle.Coord = new Coord(int.Parse(turle[1]), int.Parse(turle[0]));
             result.Turtle.Direction = GetDirection(turle[2]);
 
             var moves = new List<Move>();

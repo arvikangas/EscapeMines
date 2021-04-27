@@ -16,10 +16,10 @@ namespace EscapeMines.Tests
         {
             var input = new Input
             {
-                BoardSize = new Coord(5, 4),
+                BoardSize = new Coord(4, 5),
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
-                Exit = new Coord(4, 2),
-                Turtle = new Turtle { Coord = new Coord(0, 1), Direction = Direction.North },
+                Exit = new Coord(2, 4),
+                Turtle = new Turtle { Coord = new Coord(1, 0), Direction = Direction.North },
                 Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Right, Move.Move }
             };
             var result = _service.Run(input);
@@ -31,10 +31,10 @@ namespace EscapeMines.Tests
         {
             var input = new Input
             {
-                BoardSize = new Coord(5, 4),
+                BoardSize = new Coord(4, 5),
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
-                Exit = new Coord(4, 2),
-                Turtle = new Turtle { Coord = new Coord(0, 1), Direction = Direction.North },
+                Exit = new Coord(2, 4),
+                Turtle = new Turtle { Coord = new Coord(1, 0), Direction = Direction.North },
                 Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move, Move.Move }
             };
             var result = _service.Run(input);
@@ -46,14 +46,56 @@ namespace EscapeMines.Tests
         {
             var input = new Input
             {
-                BoardSize = new Coord(5, 4),
+                BoardSize = new Coord(4, 5),
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
                 Exit = new Coord(4, 2),
-                Turtle = new Turtle { Coord = new Coord(0, 1), Direction = Direction.North },
+                Turtle = new Turtle { Coord = new Coord(1, 0), Direction = Direction.North },
                 Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
             };
             var result = _service.Run(input);
             result.ShouldBe(Result.StillInDanger);
+        }
+
+        [Fact]
+        public void service_should_throw_exception_with_invalid_turtle_position()
+        {
+            var input = new Input
+            {
+                BoardSize = new Coord(4, 5),
+                Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
+                Exit = new Coord(4, 2),
+                Turtle = new Turtle { Coord = new Coord(5, 6), Direction = Direction.North },
+                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+            };
+            Should.Throw<ObjectOutOfBoardException>(() => _service.Run(input));
+        }
+
+        [Fact]
+        public void service_should_throw_exception_with_invalid_exit_position()
+        {
+            var input = new Input
+            {
+                BoardSize = new Coord(4, 5),
+                Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
+                Exit = new Coord(-1, 2),
+                Turtle = new Turtle { Coord = new Coord(1, 1), Direction = Direction.North },
+                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+            };
+            Should.Throw<ObjectOutOfBoardException>(() => _service.Run(input));
+        }
+
+        [Fact]
+        public void service_should_throw_exception_with_invalid_mine_position()
+        {
+            var input = new Input
+            {
+                BoardSize = new Coord(4, 5),
+                Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 44), new Coord(3, 55) },
+                Exit = new Coord(-1, 2),
+                Turtle = new Turtle { Coord = new Coord(1, 1), Direction = Direction.North },
+                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+            };
+            Should.Throw<ObjectOutOfBoardException>(() => _service.Run(input));
         }
 
         private readonly ITurtleMoverService _service;

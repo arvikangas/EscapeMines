@@ -23,16 +23,16 @@ R M M M";
 
             result.ShouldNotBeNull();
 
-            result.BoardSize.X.ShouldBe(5);
-            result.BoardSize.Y.ShouldBe(4);
+            result.BoardSize.X.ShouldBe(4);
+            result.BoardSize.Y.ShouldBe(5);
 
             result.Mines.ShouldContain(new Coord(1, 1));
             result.Mines.ShouldContain(new Coord(1, 3));
             result.Mines.ShouldContain(new Coord(3, 3));
 
-            result.Exit.ShouldBe(new Coord(4, 2));
+            result.Exit.ShouldBe(new Coord(2, 4));
 
-            result.Turtle.Coord.ShouldBe(new Coord(0, 1));
+            result.Turtle.Coord.ShouldBe(new Coord(1, 0));
             result.Turtle.Direction.ShouldBe(Direction.North);
 
             var movesList = result.Moves.ToList();
@@ -60,8 +60,8 @@ R M L M M M M M M M M M M M";
 
             result.ShouldNotBeNull();
 
-            result.BoardSize.X.ShouldBe(100);
-            result.BoardSize.Y.ShouldBe(23456);
+            result.BoardSize.Y.ShouldBe(100);
+            result.BoardSize.X.ShouldBe(23456);
 
             result.Mines.ShouldContain(new Coord(1, 1));
             result.Mines.ShouldContain(new Coord(1, 3));
@@ -72,9 +72,9 @@ R M L M M M M M M M M M M M";
             result.Mines.ShouldContain(new Coord(9, 9));
             result.Mines.ShouldContain(new Coord(10, 10));
 
-            result.Exit.ShouldBe(new Coord(98, 78));
+            result.Exit.ShouldBe(new Coord(78, 98));
 
-            result.Turtle.Coord.ShouldBe(new Coord(0, 1));
+            result.Turtle.Coord.ShouldBe(new Coord(1, 0));
             result.Turtle.Direction.ShouldBe(Direction.South);
 
             var movesList = result.Moves.ToList();
