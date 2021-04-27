@@ -8,39 +8,67 @@ namespace EscapeMines.Services
 {
     public class TurtleMoverService : ITurtleMoverService
     {
+        readonly IOutput _output;
+        public TurtleMoverService(IOutput output)
+        {
+            _output = output;
+        }
+
         public Result Run(Input input)
         {
             ValidateInput(input);
 
-            var turtle = new Turtle() { Coord = new Coord(input.Turtle.Coord.X, input.Turtle.Coord.Y), Direction = input.Turtle.Direction };
+            var turtlePosition = input.Turtle.Coord;
+            var turtleDirection = input.Turtle.Direction;
             var mines = input.Mines.ToHashSet();
 
-            foreach (var move in input.Moves)
+            foreach(var sequence in input.Sequences)
+            {
+                var sequenceResult = DoSequence(sequence, turtlePosition, turtleDirection, mines, input.BoardSize, input.Exit);
+
+                _output.LogSequence(sequence, sequenceResult.result, turtlePosition, sequenceResult.turtlePosition);
+
+                if(sequenceResult.result != Result.StillInDanger)
+                {
+                    return sequenceResult.result;
+                }
+
+                turtlePosition = sequenceResult.turtlePosition;
+                turtleDirection = sequenceResult.turtleDirection;
+            }
+
+            return Result.StillInDanger;
+        }
+
+        private (Result result, Coord turtlePosition, Direction turtleDirection) DoSequence(
+            Sequence sequence, Coord turtlePosition, Direction turtleDirection, HashSet<Coord> mines, Coord boardSize, Coord exit)
+        {
+            foreach (var move in sequence.Moves)
             {
                 switch (move)
                 {
                     case Move.Left:
                     case Move.Right:
                         {
-                            turtle.Direction = TurnTurtle(turtle.Direction, move); 
+                            turtleDirection = TurnTurtle(turtleDirection, move);
                             continue;
                         }
                     case Move.Move:
-                        turtle.Coord = MoveTurtle(input.BoardSize, turtle.Coord, turtle.Direction); break;
+                        turtlePosition = MoveTurtle(boardSize, turtlePosition, turtleDirection); break;
                 }
 
-                if (mines.Contains(turtle.Coord))
+                if (mines.Contains(turtlePosition))
                 {
-                    return Result.MineHit;
+                    return (Result.MineHit, turtlePosition, turtleDirection);
                 }
 
-                if(turtle.Coord.X == input.Exit.X && turtle.Coord.Y == input.Exit.Y)
+                if (turtlePosition == exit)
                 {
-                    return Result.Success;
+                    return (Result.Success, turtlePosition, turtleDirection);
                 }
             }
 
-            return Result.StillInDanger;
+            return (Result.StillInDanger, turtlePosition, turtleDirection);
         }
 
         private void ValidateInput(Input input)

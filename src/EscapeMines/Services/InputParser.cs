@@ -54,16 +54,20 @@ namespace EscapeMines.Services
             result.Turtle.Coord = new Coord(int.Parse(turle[1]), int.Parse(turle[0]));
             result.Turtle.Direction = GetDirection(turle[2]);
 
-            var moves = new List<Move>();
+            var sequences = new List<Sequence>();
             for (int i = 4; i < lines.Length; i++)
             {
+                var sequence = new Sequence();
+                var moves = new List<Move>();
                 var line = lines[i].Split(" ");
                 foreach (var item in line)
                 {
                     moves.Add(GetMove(item));
                 }
+                sequence.Moves = moves;
+                sequences.Add(sequence);
             }
-            result.Moves = moves;
+            result.Sequences = sequences;
 
             return result;
         }

@@ -10,6 +10,6 @@ namespace EscapeMines.Models
         public IEnumerable<Coord> Mines { get; set; }
         public Turtle Turtle { get; set; }
         public Coord Exit { get; set; }
-        public IEnumerable<Move> Moves { get; set; }
+        public IEnumerable<Sequence> Sequences { get; set; }
     }
 }

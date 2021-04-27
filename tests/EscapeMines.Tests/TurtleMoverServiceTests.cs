@@ -1,6 +1,7 @@
 using EscapeMines.Exceptions;
 using EscapeMines.Models;
 using EscapeMines.Services;
+using NSubstitute;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace EscapeMines.Tests
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
                 Exit = new Coord(2, 4),
                 Turtle = new Turtle { Coord = new Coord(1, 0), Direction = Direction.North },
-                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Right, Move.Move }
+                Sequences = new List<Sequence> { new Sequence { Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Right, Move.Move } } }
             };
             var result = _service.Run(input);
             result.ShouldBe(Result.MineHit);
@@ -35,7 +36,17 @@ namespace EscapeMines.Tests
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
                 Exit = new Coord(2, 4),
                 Turtle = new Turtle { Coord = new Coord(1, 0), Direction = Direction.North },
-                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move, Move.Move }
+                Sequences = new List<Sequence>
+                {
+                    new Sequence
+                    {
+                        Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move }
+                    },
+                    new Sequence
+                    {
+                        Moves = new List<Move> { Move.Move, Move.Move, Move.Right, Move.Move, Move.Move }
+                    }
+                }
             };
             var result = _service.Run(input);
             result.ShouldBe(Result.Success);
@@ -50,7 +61,17 @@ namespace EscapeMines.Tests
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
                 Exit = new Coord(4, 2),
                 Turtle = new Turtle { Coord = new Coord(1, 0), Direction = Direction.North },
-                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+                Sequences = new List<Sequence>
+                {
+                    new Sequence
+                    {
+                        Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move }
+                    },
+                    new Sequence
+                    {
+                        Moves = new List<Move> { Move.Move, Move.Move, Move.Right, Move.Move }
+                    }
+                }
             };
             var result = _service.Run(input);
             result.ShouldBe(Result.StillInDanger);
@@ -65,7 +86,7 @@ namespace EscapeMines.Tests
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
                 Exit = new Coord(4, 2),
                 Turtle = new Turtle { Coord = new Coord(5, 6), Direction = Direction.North },
-                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+                Sequences = new List<Sequence>()
             };
             Should.Throw<ObjectOutOfBoardException>(() => _service.Run(input));
         }
@@ -79,7 +100,7 @@ namespace EscapeMines.Tests
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 3), new Coord(3, 3) },
                 Exit = new Coord(-1, 2),
                 Turtle = new Turtle { Coord = new Coord(1, 1), Direction = Direction.North },
-                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+                Sequences = new List<Sequence>()
             };
             Should.Throw<ObjectOutOfBoardException>(() => _service.Run(input));
         }
@@ -93,16 +114,18 @@ namespace EscapeMines.Tests
                 Mines = new List<Coord> { new Coord(1, 1), new Coord(1, 44), new Coord(3, 55) },
                 Exit = new Coord(-1, 2),
                 Turtle = new Turtle { Coord = new Coord(1, 1), Direction = Direction.North },
-                Moves = new List<Move> { Move.Move, Move.Right, Move.Move, Move.Move, Move.Move, Move.Move, Move.Right, Move.Move }
+                Sequences = new List<Sequence>()
             };
             Should.Throw<ObjectOutOfBoardException>(() => _service.Run(input));
         }
 
+        private readonly IOutput _output;
         private readonly ITurtleMoverService _service;
 
         public TurtleMoverServiceTests()
         {
-            _service = new TurtleMoverService();
+            _output = Substitute.For<IOutput>();
+            _service = new TurtleMoverService(_output);
         }
     }
 }

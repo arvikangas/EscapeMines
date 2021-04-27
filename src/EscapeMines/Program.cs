@@ -16,7 +16,7 @@ namespace EscapeMines
             IInputParser parser = new InputParser();
             var input = parser.Parse(s);
 
-            ITurtleMoverService mover = new TurtleMoverService();
+            ITurtleMoverService mover = new TurtleMoverService(new ConsoleOutput());
             var result = mover.Run(input);
 
             Console.WriteLine($"Result: {result}");

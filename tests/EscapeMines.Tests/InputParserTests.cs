@@ -35,17 +35,21 @@ R M M M";
             result.Turtle.Coord.ShouldBe(new Coord(1, 0));
             result.Turtle.Direction.ShouldBe(Direction.North);
 
-            var movesList = result.Moves.ToList();
-            movesList.Count.ShouldBe(9);
-            movesList[0].ShouldBe(Move.Right);
-            movesList[1].ShouldBe(Move.Move);
-            movesList[2].ShouldBe(Move.Left);
-            movesList[3].ShouldBe(Move.Move);
-            movesList[4].ShouldBe(Move.Move);
-            movesList[5].ShouldBe(Move.Right);
-            movesList[6].ShouldBe(Move.Move);
-            movesList[7].ShouldBe(Move.Move);
-            movesList[8].ShouldBe(Move.Move);
+            var sequences = result.Sequences.ToList();
+            sequences.Count.ShouldBe(2);
+
+            var movesList1 = sequences[0].Moves.ToList();
+            movesList1[0].ShouldBe(Move.Right);
+            movesList1[1].ShouldBe(Move.Move);
+            movesList1[2].ShouldBe(Move.Left);
+            movesList1[3].ShouldBe(Move.Move);
+            movesList1[4].ShouldBe(Move.Move);
+
+            var movesList2 = sequences[1].Moves.ToList();
+            movesList2[0].ShouldBe(Move.Right);
+            movesList2[1].ShouldBe(Move.Move);
+            movesList2[2].ShouldBe(Move.Move);
+            movesList2[3].ShouldBe(Move.Move);
         }
 
         [Fact]
@@ -77,7 +81,10 @@ R M L M M M M M M M M M M M";
             result.Turtle.Coord.ShouldBe(new Coord(1, 0));
             result.Turtle.Direction.ShouldBe(Direction.South);
 
-            var movesList = result.Moves.ToList();
+            var sequences = result.Sequences.ToList();
+            sequences.Count.ShouldBe(1);
+
+            var movesList = sequences[0].Moves.ToList();
             movesList.Count.ShouldBe(14);
             movesList[0].ShouldBe(Move.Right);
             movesList[1].ShouldBe(Move.Move);
